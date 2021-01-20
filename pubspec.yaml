@@ -1,0 +1,33 @@
+name: arculus
+description: A flutter library for custom session management and authentication using firebase auth.
+version: 0.0.1
+repository: https://www.github.com/moseskarunia/arculus
+
+environment:
+  sdk: ">=2.8.0 <3.0.0"
+  flutter: ">=1.22.5"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  arculus_auth_widgets: ^0.0.5
+  clock: ^1.0.1
+  cornerstone: ^0.1.2
+  crypto: ^2.1.5
+  equatable: ^1.2.5
+  firebase_core: ^0.5.3
+  firebase_auth: ^0.18.4
+  google_sign_in: ^4.5.6
+  hive: ^1.4.4
+  json_annotation: ^3.1.1
+  meta: ^1.2.4
+  sign_in_with_apple: ^2.5.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ">=1.0.0 <2.0.0"
+  json_serializable: ^3.3.0
+  mockito: ^4.1.3
+
+flutter:
