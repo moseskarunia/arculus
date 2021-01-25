@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ArculusOnboarding(
+      body: ArculusOnboardingBody(
         branding: Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

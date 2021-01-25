@@ -1,3 +1,3 @@
 library arculus;
 
-export 'src/widgets/arculus_onboarding.dart';
+export 'src/widgets/arculus_onboarding_body.dart';

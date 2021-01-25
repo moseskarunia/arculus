@@ -3,7 +3,7 @@ import 'package:arculus_auth_widgets/arculus_auth_widgets.dart';
 
 /// Widget to easily apply arculus-style onboarding page. Designed to be put
 /// under Scaffold's body.
-class ArculusOnboarding extends StatelessWidget {
+class ArculusOnboardingBody extends StatelessWidget {
   /// Branding, logo, or similar to put on top of [buttons]
   final Widget branding;
 
@@ -18,7 +18,7 @@ class ArculusOnboarding extends StatelessWidget {
   /// [ArculusGoogleButton] for this.
   final List<Widget> buttons;
 
-  const ArculusOnboarding({
+  const ArculusOnboardingBody({
     Key key,
     this.branding,
     this.padding,
