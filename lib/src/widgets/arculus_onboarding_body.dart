@@ -28,15 +28,18 @@ class ArculusOnboardingBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = [Expanded(child: branding ?? SizedBox())];
+    List<Widget> children = [
+      Expanded(key: Key('branding-area'), child: branding ?? SizedBox())
+    ];
 
-    children = [...buttons];
+    children = [...children, ...buttons];
 
     return Container(
-      key: Key('arculus_onboarding_body'),
+      key: Key('arculus-onboarding-body'),
       width: width ?? MediaQuery.of(context).size.width,
       padding: padding ?? EdgeInsets.zero,
       child: Column(
+        key: Key('main-column'),
         crossAxisAlignment: CrossAxisAlignment.center,
         children: children,
       ),
