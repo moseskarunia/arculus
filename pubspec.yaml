@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  arculus_auth_widgets: ^0.0.5
+  arculus_auth_widgets: ^0.1.0
   clock: ^1.0.1
   cornerstone: ^0.1.2
   crypto: ^2.1.5

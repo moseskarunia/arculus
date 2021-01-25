@@ -1,6 +1,6 @@
-import 'package:example/arculus_onboarding_set.dart';
-import 'package:example/arculus_onboarding_set_controller_impl.dart';
+import 'package:arculus_auth_widgets/arculus_auth_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:arculus/arculus.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,14 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ArculusOnboardingSet(
-        googleButtonLabel: 'Continue with Google',
-        appleButtonLabel: 'Continue with Apple',
-        emailButtonLabel: 'Continue with Email',
-        isGoogleButtonVisible: true,
-        isAppleButtonVisible: true,
-        isEmailButtonVisible: true,
-        controller: ArculusOnboardingSetControllerImpl(),
+      body: ArculusOnboarding(
         branding: Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -62,6 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         padding: const EdgeInsets.all(16),
+        buttons: [
+          ArculusAppleButton(
+            label: 'Continue with Apple',
+            onPressed: (_) => {},
+          )
+        ],
       ),
     );
   }
