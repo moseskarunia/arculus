@@ -33,6 +33,7 @@ class ArculusOnboardingBody extends StatelessWidget {
     children = [...buttons];
 
     return Container(
+      key: Key('arculus_onboarding_body'),
       width: width ?? MediaQuery.of(context).size.width,
       padding: padding ?? EdgeInsets.zero,
       child: Column(
