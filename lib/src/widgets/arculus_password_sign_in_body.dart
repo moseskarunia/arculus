@@ -88,60 +88,98 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
       );
     }
 
+    final listViewChildren = <Widget>[
+      Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: TextField(
+          key: Key('sign-in-username'),
+          controller: _usernameController,
+          enabled: !widget.signInState.isLoading,
+          decoration: InputDecoration(hintText: widget.uiData.usernameHint),
+        ),
+      ),
+      Container(
+        margin: const EdgeInsets.only(bottom: 32),
+        child: TextField(
+          key: Key('sign-in-password'),
+          controller: _passwordController,
+          enabled: !widget.signInState.isLoading,
+          decoration: InputDecoration(hintText: widget.uiData.passwordHint),
+          obscureText: true,
+        ),
+      ),
+      Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: ElevatedButton(
+          key: Key('sign-in-button'),
+          child: buttonChild,
+          onPressed:
+              widget.signInState.isLoading ? null : () => _signIn(context),
+        ),
+      ),
+    ];
+
+    if (widget.signInState.errorMessage != null &&
+        widget.signInState.errorMessage.isNotEmpty) {
+      listViewChildren.add(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          key: Key('sign-in-error-message'),
+          children: [
+            Icon(
+              Icons.error,
+              size: 14,
+              color: Theme.of(context).errorColor,
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                widget.signInState.errorMessage,
+                style: Theme.of(context).textTheme.caption,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (widget.uiData.signUpActionLabel != null &&
+        widget.uiData.signUpActionLabel.isNotEmpty) {
+      final Widget action = Padding(
+        padding: EdgeInsets.only(top: 16),
+        child: InkWell(
+          key: Key('sign-up-action'),
+          onTap: () => widget.controller.onSignUpPressed(context),
+          child: Text(
+            widget.uiData.signUpActionLabel,
+            style: Theme.of(context)
+                .textTheme
+                .caption
+                .copyWith(fontWeight: FontWeight.bold),
+          ),
+        ),
+      );
+      if (widget.uiData.signUpQuestionLabel != null &&
+          widget.uiData.signUpQuestionLabel.isNotEmpty) {
+        listViewChildren.add(Row(
+          key: Key('sign-up-text-row'),
+          children: [
+            Text(
+              widget.uiData.signUpQuestionLabel + ' ',
+              key: Key('sign-up-question'),
+              style: Theme.of(context).textTheme.caption,
+            ),
+            action
+          ],
+        ));
+      } else {
+        listViewChildren.add(action);
+      }
+    }
     return ListView(
       key: Key('sign-in-root-list-view'),
       padding: widget.padding ?? const EdgeInsets.symmetric(vertical: 16),
-      children: [
-        Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          child: TextField(
-            key: Key('sign-in-username'),
-            controller: _usernameController,
-            enabled: !widget.signInState.isLoading,
-            decoration: InputDecoration(hintText: widget.uiData.usernameHint),
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(bottom: 32),
-          child: TextField(
-            key: Key('sign-in-password'),
-            controller: _passwordController,
-            enabled: !widget.signInState.isLoading,
-            decoration: InputDecoration(hintText: widget.uiData.passwordHint),
-            obscureText: true,
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          child: ElevatedButton(
-            key: Key('sign-in-button'),
-            child: buttonChild,
-            onPressed:
-                widget.signInState.isLoading ? null : () => _signIn(context),
-          ),
-        ),
-        widget.signInState.errorMessage == null ||
-                widget.signInState.errorMessage.isEmpty
-            ? SizedBox()
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                key: Key('sign-in-error-message'),
-                children: [
-                  Icon(
-                    Icons.error,
-                    size: 14,
-                    color: Theme.of(context).errorColor,
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Text(
-                      widget.signInState.errorMessage,
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                  ),
-                ],
-              ),
-      ],
+      children: listViewChildren,
     );
   }
 }
@@ -186,8 +224,8 @@ abstract class ArculusSignInController {
   /// Triggered when the [forgotPasswordActionLabel] is pressed.
   Future<void> onForgotPasswordPressed(BuildContext context);
 
-  /// Triggered when the [registerActionLabel] is pressed.
-  Future<void> onRegisterPressed(BuildContext context);
+  /// Triggered when the [signUpActionLabel] is pressed.
+  Future<void> onSignUpPressed(BuildContext context);
 }
 
 /// Static UI data of arculus sign in body.
@@ -204,8 +242,6 @@ class ArculusSignInStaticUIData {
   /// Question on the forgot password label. This label is not interactable,
   /// just to make the message more friendly. The interactable label is
   /// [forgotPasswordActionLabel].
-  ///
-  /// If null or empty, forgot password option is not displayed
   final String forgotPasswordQuestionLabel;
 
   /// Action label which will be placed after [forgotPasswordQuestionLabel].
@@ -214,26 +250,24 @@ class ArculusSignInStaticUIData {
   /// If null or empty, forgot password option is not displayed
   final String forgotPasswordActionLabel;
 
-  /// Question on the register label. This label is not interactable,
+  /// Question on the sign up label. This label is not interactable,
   /// just to make the message more friendly. The interactable label is
-  /// [registerActionLabel].
-  ///
-  /// If null or empty, register option is not displayed
-  final String registerQuestionLabel;
+  /// [signUpActionLabel].
+  final String signUpQuestionLabel;
 
-  /// Action label which will be placed after [registerQuestionLabel].
+  /// Action label which will be placed after [signUpQuestionLabel].
   /// Will trigger [onRegisterPressed] when pressed.
   ///
-  /// If null or empty, register option is not displayed
-  final String registerActionLabel;
+  /// If null or empty, sign up option is not displayed
+  final String signUpActionLabel;
 
   const ArculusSignInStaticUIData({
     @required this.usernameHint,
     @required this.passwordHint,
     @required this.signInButtonLabel,
     this.forgotPasswordActionLabel,
-    this.registerActionLabel,
+    this.signUpActionLabel,
     this.forgotPasswordQuestionLabel,
-    this.registerQuestionLabel,
+    this.signUpQuestionLabel,
   });
 }

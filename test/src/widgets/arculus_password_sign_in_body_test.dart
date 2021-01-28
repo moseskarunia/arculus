@@ -518,4 +518,96 @@ void main() {
           .called(1);
     },
   );
+
+  group('signUp', () {
+    testWidgets('should be displayed without question', (tester) async {
+      final uiDataFixture = ArculusSignInStaticUIData(
+        usernameHint: 'Email or username',
+        passwordHint: 'Password',
+        signInButtonLabel: 'SIGN IN',
+        signUpActionLabel: 'Sign Up',
+      );
+
+      final stateFixture = ArculusSignInState();
+
+      await tester.pumpWidget(MaterialApp(
+        theme: ThemeData.from(
+          colorScheme: ColorScheme.light(),
+          textTheme: Typography.englishLike2018,
+        ),
+        home: Scaffold(
+          body: ArculusPasswordSignInBody(
+            controller: controller,
+            uiData: uiDataFixture,
+            signInState: stateFixture,
+          ),
+        ),
+      ));
+
+      expect(find.byKey(Key('sign-up-text-row')), findsNothing);
+      expect(find.byKey(Key('sign-up-question')), findsNothing);
+      final signUpActionFinder = find.byKey(Key('sign-up-action'));
+      final signUpActionTextFinder = find
+          .descendant(of: signUpActionFinder, matching: find.byType(Text))
+          .first;
+      final signUpActionText = tester.widget<Text>(signUpActionTextFinder);
+      expect(signUpActionText.data, 'Sign Up');
+
+      expect(
+        signUpActionText.style.fontSize,
+        Typography.englishLike2018.caption.fontSize,
+      );
+      expect(signUpActionText.style.fontWeight, FontWeight.bold);
+
+      await tester.tap(signUpActionFinder);
+      verify(controller.onSignUpPressed(any)).called(1);
+    });
+    testWidgets('should be displayed with question', (tester) async {
+      final uiDataFixture = ArculusSignInStaticUIData(
+        usernameHint: 'Email or username',
+        passwordHint: 'Password',
+        signInButtonLabel: 'SIGN IN',
+        signUpActionLabel: 'Sign Up',
+        signUpQuestionLabel: 'No account yet?',
+      );
+
+      final stateFixture = ArculusSignInState();
+
+      await tester.pumpWidget(MaterialApp(
+        theme: ThemeData.from(
+          colorScheme: ColorScheme.light(),
+          textTheme: Typography.englishLike2018,
+        ),
+        home: Scaffold(
+          body: ArculusPasswordSignInBody(
+            controller: controller,
+            uiData: uiDataFixture,
+            signInState: stateFixture,
+          ),
+        ),
+      ));
+
+      expect(find.byKey(Key('sign-up-text-row')), findsOneWidget);
+      final signUpQuestionFinder = find.byKey(Key('sign-up-question'));
+      final signUpQuestion = tester.widget<Text>(signUpQuestionFinder);
+
+      expect(signUpQuestion.data, 'No account yet?' + ' ');
+
+      final signUpActionFinder = find.byKey(Key('sign-up-action'));
+      final signUpActionTextFinder = find
+          .descendant(of: signUpActionFinder, matching: find.byType(Text))
+          .first;
+      final signUpActionText = tester.widget<Text>(signUpActionTextFinder);
+      expect(signUpActionText.data, 'Sign Up');
+
+      expect(
+        signUpActionText.style.fontSize,
+        Typography.englishLike2018.caption.fontSize,
+      );
+      expect(signUpActionText.style.fontWeight, FontWeight.bold);
+
+      await tester.tap(signUpActionFinder);
+      verify(controller.onSignUpPressed(any)).called(1);
+    });
+  });
 }
