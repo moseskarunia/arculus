@@ -292,6 +292,10 @@ void main() {
 
         expect(text.data, uiDataFixture.signInButtonLabel);
         expect(button.enabled, true);
+
+        await tester.tap(buttonFinder);
+        verify(controller.onSignInPressed(any, 'test@test.com', 'admin123'))
+            .called(1);
       },
     );
     testWidgets(
@@ -347,7 +351,13 @@ void main() {
           BoxConstraints.tightFor(width: 12, height: 12),
         );
         expect(progressWrapper.margin, EdgeInsets.only(left: 16));
+
+        tester.tap(buttonFinder);
+        verifyNever(
+            controller.onSignInPressed(any, 'test@test.com', 'admin123'));
       },
     );
   });
+
+  group('error message', () {});
 }

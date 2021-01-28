@@ -48,13 +48,17 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
   }
 
   Future<void> _signIn(BuildContext context) async {
-    /// TODO: Hide keyboard
+    /// Close the keyboard
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
 
-    // final result = await widget.controller.onSignInPressed(
-    //   context,
-    //   _usernameController.text,
-    //   _passwordController.text,
-    // );
+    await widget.controller.onSignInPressed(
+      context,
+      _usernameController.text,
+      _passwordController.text,
+    );
   }
 
   @override
