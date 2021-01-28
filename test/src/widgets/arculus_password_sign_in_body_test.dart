@@ -29,6 +29,49 @@ void main() {
     });
   });
 
+  group('root ListView', () {
+    final uiDataFixture = ArculusSignInStaticUIData(
+      usernameHint: 'Email or username',
+      passwordHint: 'Password',
+      signInButtonLabel: 'SIGN IN',
+    );
+    testWidgets('should use provided padding', (tester) async {
+      final stateFixture = ArculusSignInState();
+
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: ArculusPasswordSignInBody(
+            controller: controller,
+            uiData: uiDataFixture,
+            signInState: stateFixture,
+            padding: EdgeInsets.all(16),
+          ),
+        ),
+      ));
+
+      final listViewFinder = find.byKey(Key('sign-in-root-list-view'));
+      final listView = tester.widget<ListView>(listViewFinder);
+      expect(listView.padding, EdgeInsets.all(16));
+    });
+    testWidgets('should use default padding', (tester) async {
+      final stateFixture = ArculusSignInState();
+
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: ArculusPasswordSignInBody(
+            controller: controller,
+            uiData: uiDataFixture,
+            signInState: stateFixture,
+          ),
+        ),
+      ));
+
+      final listViewFinder = find.byKey(Key('sign-in-root-list-view'));
+      final listView = tester.widget<ListView>(listViewFinder);
+      expect(listView.padding, EdgeInsets.symmetric(vertical: 16));
+    });
+  });
+
   group('username TextField', () {
     final uiDataFixture = ArculusSignInStaticUIData(
       usernameHint: 'Email or username',
@@ -359,5 +402,35 @@ void main() {
     );
   });
 
-  group('error message', () {});
+  // group('error message', () {
+  //   final uiDataFixture = ArculusSignInStaticUIData(
+  //     usernameHint: 'Email or username',
+  //     passwordHint: 'Password',
+  //     signInButtonLabel: 'SIGN IN',
+  //   );
+
+  //   testWidgets(
+  //     'should be visible when state.errorMessage is provided',
+  //     (tester) async {
+  //       final stateFixture = ArculusSignInState(
+  //         username: 'test@test.com',
+  //         password: 'admin123',
+  //         errorMessage: 'Test Error',
+  //       );
+
+  //       await tester.pumpWidget(MaterialApp(
+  //         home: Scaffold(
+  //           body: ArculusPasswordSignInBody(
+  //             controller: controller,
+  //             uiData: uiDataFixture,
+  //             signInState: stateFixture,
+  //           ),
+  //         ),
+  //       ));
+
+  //       final errorMessageFinder = find.byKey(Key('sign-in-error-message'));
+  //       final message = tester.widget<Row>(errorMessageFinder);
+  //     },
+  //   );
+  // });
 }

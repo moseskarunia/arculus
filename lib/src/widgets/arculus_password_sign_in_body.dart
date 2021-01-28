@@ -15,10 +15,15 @@ class ArculusPasswordSignInBody extends StatefulWidget {
   /// Provide sign in state to modify the UI, such as errorMessage and isLoading
   final ArculusSignInState signInState;
 
+  /// Will be applied to list view. If null, will use
+  /// EdgeInsets.symmetric(vertical: 16)
+  final EdgeInsets padding;
+
   const ArculusPasswordSignInBody({
     Key key,
     @required this.controller,
     @required this.uiData,
+    this.padding,
     this.signInState,
   }) : super(key: key);
 
@@ -84,7 +89,8 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
     }
 
     return ListView(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      key: Key('sign-in-root-list-view'),
+      padding: widget.padding ?? const EdgeInsets.symmetric(vertical: 16),
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 16),
@@ -112,7 +118,17 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
             onPressed:
                 widget.signInState.isLoading ? null : () => _signIn(context),
           ),
-        )
+        ),
+        widget.signInState.errorMessage == null ||
+                widget.signInState.errorMessage.isEmpty
+            ? SizedBox()
+            : Row(
+                key: Key('sign-in-error-message'),
+                children: [
+                  Icon(Icons.error, size: 14, color: Colors.red),
+                  Expanded(child: Text(widget.signInState.errorMessage)),
+                ],
+              ),
       ],
     );
   }
