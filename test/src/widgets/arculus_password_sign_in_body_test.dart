@@ -27,23 +27,6 @@ void main() {
         'admin12345',
       ]);
     });
-    testWidgets(
-      'should assign provided username and password state to their '
-      'respective text fields',
-      (tester) async {},
-    );
-    testWidgets(
-      'should display provided errorMessage if provided',
-      (tester) async {},
-    );
-    testWidgets(
-      'when isLoading, should disable text fields and display loading indicator',
-      (tester) async {},
-    );
-    testWidgets(
-      'when ',
-      (tester) async {},
-    );
   });
 
   group('username TextField', () {
