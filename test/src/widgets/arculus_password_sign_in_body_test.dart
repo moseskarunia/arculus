@@ -559,6 +559,11 @@ void main() {
       );
       expect(signUpActionText.style.fontWeight, FontWeight.bold);
 
+      final paddingFinder = find.byKey(Key('sign-up-padding'));
+      expect(paddingFinder, findsOneWidget);
+      expect(tester.widget<Padding>(paddingFinder).padding,
+          EdgeInsets.symmetric(vertical: 8));
+
       await tester.tap(signUpActionFinder);
       verify(controller.onSignUpPressed(any)).called(1);
     });
@@ -606,8 +611,123 @@ void main() {
       );
       expect(signUpActionText.style.fontWeight, FontWeight.bold);
 
+      final paddingFinder = find.byKey(Key('sign-up-padding'));
+      expect(paddingFinder, findsOneWidget);
+      expect(tester.widget<Padding>(paddingFinder).padding,
+          EdgeInsets.symmetric(vertical: 8));
+
       await tester.tap(signUpActionFinder);
       verify(controller.onSignUpPressed(any)).called(1);
+    });
+  });
+
+  group('resetPassword', () {
+    testWidgets('should be displayed without question', (tester) async {
+      final uiDataFixture = ArculusSignInStaticUIData(
+        usernameHint: 'Email or username',
+        passwordHint: 'Password',
+        signInButtonLabel: 'SIGN IN',
+        resetPasswordActionLabel: 'Reset Your Password',
+      );
+
+      final stateFixture = ArculusSignInState();
+
+      await tester.pumpWidget(MaterialApp(
+        theme: ThemeData.from(
+          colorScheme: ColorScheme.light(),
+          textTheme: Typography.englishLike2018,
+        ),
+        home: Scaffold(
+          body: ArculusPasswordSignInBody(
+            controller: controller,
+            uiData: uiDataFixture,
+            signInState: stateFixture,
+          ),
+        ),
+      ));
+
+      expect(find.byKey(Key('reset-password-text-row')), findsNothing);
+      expect(find.byKey(Key('reset-password-question')), findsNothing);
+      final resetPasswordActionFinder =
+          find.byKey(Key('reset-password-action'));
+      final resetPasswordActionTextFinder = find
+          .descendant(
+              of: resetPasswordActionFinder, matching: find.byType(Text))
+          .first;
+      final resetPasswordActionText =
+          tester.widget<Text>(resetPasswordActionTextFinder);
+      expect(resetPasswordActionText.data, 'Reset Your Password');
+
+      expect(
+        resetPasswordActionText.style.fontSize,
+        Typography.englishLike2018.caption.fontSize,
+      );
+      expect(resetPasswordActionText.style.fontWeight, FontWeight.bold);
+
+      final paddingFinder = find.byKey(Key('reset-password-padding'));
+      expect(paddingFinder, findsOneWidget);
+      expect(tester.widget<Padding>(paddingFinder).padding,
+          EdgeInsets.symmetric(vertical: 8));
+
+      await tester.tap(resetPasswordActionFinder);
+      verify(controller.onResetPasswordPressed(any)).called(1);
+    });
+    testWidgets('should be displayed with question', (tester) async {
+      final uiDataFixture = ArculusSignInStaticUIData(
+        usernameHint: 'Email or username',
+        passwordHint: 'Password',
+        signInButtonLabel: 'SIGN IN',
+        resetPasswordActionLabel: 'Reset Your Password',
+        resetPasswordQuestionLabel: 'Password forgotten?',
+      );
+
+      final stateFixture = ArculusSignInState();
+
+      await tester.pumpWidget(MaterialApp(
+        theme: ThemeData.from(
+          colorScheme: ColorScheme.light(),
+          textTheme: Typography.englishLike2018,
+        ),
+        home: Scaffold(
+          body: ArculusPasswordSignInBody(
+            controller: controller,
+            uiData: uiDataFixture,
+            signInState: stateFixture,
+          ),
+        ),
+      ));
+
+      expect(find.byKey(Key('reset-password-text-row')), findsOneWidget);
+      final resetPasswordQuestionFinder =
+          find.byKey(Key('reset-password-question'));
+      final resetPasswordQuestion =
+          tester.widget<Text>(resetPasswordQuestionFinder);
+
+      expect(resetPasswordQuestion.data, 'Password forgotten?' + ' ');
+
+      final resetPasswordActionFinder =
+          find.byKey(Key('reset-password-action'));
+      final resetPasswordActionTextFinder = find
+          .descendant(
+              of: resetPasswordActionFinder, matching: find.byType(Text))
+          .first;
+      final resetPasswordActionText =
+          tester.widget<Text>(resetPasswordActionTextFinder);
+      expect(resetPasswordActionText.data, 'Reset Your Password');
+
+      expect(
+        resetPasswordActionText.style.fontSize,
+        Typography.englishLike2018.caption.fontSize,
+      );
+      expect(resetPasswordActionText.style.fontWeight, FontWeight.bold);
+
+      final paddingFinder = find.byKey(Key('reset-password-padding'));
+      expect(paddingFinder, findsOneWidget);
+      expect(tester.widget<Padding>(paddingFinder).padding,
+          EdgeInsets.symmetric(vertical: 8));
+
+      await tester.tap(resetPasswordActionFinder);
+      verify(controller.onResetPasswordPressed(any)).called(1);
     });
   });
 }

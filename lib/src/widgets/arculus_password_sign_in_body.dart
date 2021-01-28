@@ -145,37 +145,86 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
 
     if (widget.uiData.signUpActionLabel != null &&
         widget.uiData.signUpActionLabel.isNotEmpty) {
-      final Widget action = Padding(
-        padding: EdgeInsets.only(top: 16),
-        child: InkWell(
-          key: Key('sign-up-action'),
-          onTap: () => widget.controller.onSignUpPressed(context),
-          child: Text(
-            widget.uiData.signUpActionLabel,
-            style: Theme.of(context)
-                .textTheme
-                .caption
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
+      final Widget action = InkWell(
+        key: Key('sign-up-action'),
+        onTap: () => widget.controller.onSignUpPressed(context),
+        child: Text(
+          widget.uiData.signUpActionLabel,
+          style: Theme.of(context)
+              .textTheme
+              .caption
+              .copyWith(fontWeight: FontWeight.bold),
         ),
       );
       if (widget.uiData.signUpQuestionLabel != null &&
           widget.uiData.signUpQuestionLabel.isNotEmpty) {
-        listViewChildren.add(Row(
-          key: Key('sign-up-text-row'),
-          children: [
-            Text(
-              widget.uiData.signUpQuestionLabel + ' ',
-              key: Key('sign-up-question'),
-              style: Theme.of(context).textTheme.caption,
-            ),
-            action
-          ],
+        listViewChildren.add(Padding(
+          key: Key('sign-up-padding'),
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            key: Key('sign-up-text-row'),
+            children: [
+              Text(
+                widget.uiData.signUpQuestionLabel + ' ',
+                key: Key('sign-up-question'),
+                style: Theme.of(context).textTheme.caption,
+              ),
+              action
+            ],
+          ),
         ));
       } else {
-        listViewChildren.add(action);
+        listViewChildren.add(
+          Padding(
+            key: Key('sign-up-padding'),
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: action,
+          ),
+        );
       }
     }
+
+    if (widget.uiData.resetPasswordActionLabel != null &&
+        widget.uiData.resetPasswordActionLabel.isNotEmpty) {
+      final Widget action = InkWell(
+        key: Key('reset-password-action'),
+        onTap: () => widget.controller.onResetPasswordPressed(context),
+        child: Text(
+          widget.uiData.resetPasswordActionLabel,
+          style: Theme.of(context)
+              .textTheme
+              .caption
+              .copyWith(fontWeight: FontWeight.bold),
+        ),
+      );
+      if (widget.uiData.resetPasswordQuestionLabel != null &&
+          widget.uiData.resetPasswordQuestionLabel.isNotEmpty) {
+        listViewChildren.add(Padding(
+          key: Key('reset-password-padding'),
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            key: Key('reset-password-text-row'),
+            children: [
+              Text(
+                widget.uiData.resetPasswordQuestionLabel + ' ',
+                key: Key('reset-password-question'),
+                style: Theme.of(context).textTheme.caption,
+              ),
+              action
+            ],
+          ),
+        ));
+      } else {
+        listViewChildren.add(
+          Padding(
+            key: Key('reset-password-padding'),
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: action,
+          ),
+        );
+      }
+    }
+
     return ListView(
       key: Key('sign-in-root-list-view'),
       padding: widget.padding ?? const EdgeInsets.symmetric(vertical: 16),
@@ -221,8 +270,8 @@ abstract class ArculusSignInController {
     String password,
   );
 
-  /// Triggered when the [forgotPasswordActionLabel] is pressed.
-  Future<void> onForgotPasswordPressed(BuildContext context);
+  /// Triggered when the [resetPasswordActionLabel] is pressed.
+  Future<void> onResetPasswordPressed(BuildContext context);
 
   /// Triggered when the [signUpActionLabel] is pressed.
   Future<void> onSignUpPressed(BuildContext context);
@@ -239,16 +288,16 @@ class ArculusSignInStaticUIData {
   /// Label of the sign in button. Will trigger [onSignInPressed] when tapped.
   final String signInButtonLabel;
 
-  /// Question on the forgot password label. This label is not interactable,
+  /// Question on the reset password label. This label is not interactable,
   /// just to make the message more friendly. The interactable label is
-  /// [forgotPasswordActionLabel].
-  final String forgotPasswordQuestionLabel;
+  /// [resetPasswordActionLabel].
+  final String resetPasswordQuestionLabel;
 
-  /// Action label which will be placed after [forgotPasswordQuestionLabel].
-  /// Will trigger [onForgotPasswordPressed].
+  /// Action label which will be placed after [resetPasswordQuestionLabel].
+  /// Will trigger [onResetPasswordPressed].
   ///
-  /// If null or empty, forgot password option is not displayed
-  final String forgotPasswordActionLabel;
+  /// If null or empty, reset password option is not displayed
+  final String resetPasswordActionLabel;
 
   /// Question on the sign up label. This label is not interactable,
   /// just to make the message more friendly. The interactable label is
@@ -265,9 +314,9 @@ class ArculusSignInStaticUIData {
     @required this.usernameHint,
     @required this.passwordHint,
     @required this.signInButtonLabel,
-    this.forgotPasswordActionLabel,
+    this.resetPasswordActionLabel,
     this.signUpActionLabel,
-    this.forgotPasswordQuestionLabel,
+    this.resetPasswordQuestionLabel,
     this.signUpQuestionLabel,
   });
 }
