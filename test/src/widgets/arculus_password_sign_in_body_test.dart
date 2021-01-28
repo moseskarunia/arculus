@@ -194,7 +194,7 @@ void main() {
     );
 
     testWidgets(
-      'should be wrapped in container with 32 bottom margin',
+      'should be wrapped in container with 32 bottom margin with ',
       (tester) async {
         final stateFixture = ArculusSignInState();
 
@@ -242,6 +242,7 @@ void main() {
           uiDataFixture.passwordHint,
         );
         expect(passwordTextField.controller.text, '');
+        expect(passwordTextField.obscureText, true);
       },
     );
 
@@ -402,35 +403,119 @@ void main() {
     );
   });
 
-  // group('error message', () {
-  //   final uiDataFixture = ArculusSignInStaticUIData(
-  //     usernameHint: 'Email or username',
-  //     passwordHint: 'Password',
-  //     signInButtonLabel: 'SIGN IN',
-  //   );
+  group('error message', () {
+    final uiDataFixture = ArculusSignInStaticUIData(
+      usernameHint: 'Email or username',
+      passwordHint: 'Password',
+      signInButtonLabel: 'SIGN IN',
+    );
 
-  //   testWidgets(
-  //     'should be visible when state.errorMessage is provided',
-  //     (tester) async {
-  //       final stateFixture = ArculusSignInState(
-  //         username: 'test@test.com',
-  //         password: 'admin123',
-  //         errorMessage: 'Test Error',
-  //       );
+    testWidgets('should NOT be visible when state.errorMessage is null',
+        (tester) async {
+      final stateFixture = ArculusSignInState(
+        username: 'test@test.com',
+        password: 'admin123',
+      );
 
-  //       await tester.pumpWidget(MaterialApp(
-  //         home: Scaffold(
-  //           body: ArculusPasswordSignInBody(
-  //             controller: controller,
-  //             uiData: uiDataFixture,
-  //             signInState: stateFixture,
-  //           ),
-  //         ),
-  //       ));
+      await tester.pumpWidget(MaterialApp(
+        theme: ThemeData(errorColor: Colors.orange),
+        home: Scaffold(
+          body: ArculusPasswordSignInBody(
+            controller: controller,
+            uiData: uiDataFixture,
+            signInState: stateFixture,
+          ),
+        ),
+      ));
+      expect(find.byKey(Key('sign-in-error-message')), findsNothing);
+    });
 
-  //       final errorMessageFinder = find.byKey(Key('sign-in-error-message'));
-  //       final message = tester.widget<Row>(errorMessageFinder);
-  //     },
-  //   );
-  // });
+    testWidgets(
+      'should be visible when state.errorMessage is provided',
+      (tester) async {
+        final stateFixture = ArculusSignInState(
+          username: 'test@test.com',
+          password: 'admin123',
+          errorMessage:
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        );
+
+        await tester.pumpWidget(MaterialApp(
+          theme: ThemeData.from(
+            colorScheme: ColorScheme.light(),
+            textTheme: Typography.englishLike2018,
+          ).copyWith(errorColor: Colors.orange),
+          home: Scaffold(
+            body: ArculusPasswordSignInBody(
+              controller: controller,
+              uiData: uiDataFixture,
+              signInState: stateFixture,
+            ),
+          ),
+        ));
+
+        final errorMessageFinder = find.byKey(Key('sign-in-error-message'));
+        final message = tester.widget<Row>(errorMessageFinder);
+
+        expect(message.crossAxisAlignment, CrossAxisAlignment.center);
+
+        final iconFinder = find.descendant(
+            of: errorMessageFinder, matching: find.byType(Icon));
+        final icon = tester.widget<Icon>(iconFinder);
+        expect(icon.icon, Icons.error);
+        expect(icon.size, 14);
+        expect(icon.color, Colors.orange);
+
+        final textFinder = find.descendant(
+          of: errorMessageFinder,
+          matching: find.byType(Text),
+        );
+        final text = tester.widget<Text>(textFinder);
+        expect(text.data, stateFixture.errorMessage);
+
+        expect(
+          text.style.fontSize,
+          Typography.englishLike2018.caption.fontSize,
+        );
+        expect(
+          text.style.fontWeight,
+          Typography.englishLike2018.caption.fontWeight,
+        );
+      },
+    );
+  });
+
+  testWidgets(
+    'should type in username, password, and submit them when '
+    'sign in button is tapped',
+    (tester) async {
+      final uiDataFixture = ArculusSignInStaticUIData(
+        usernameHint: 'Email or username',
+        passwordHint: 'Password',
+        signInButtonLabel: 'SIGN IN',
+      );
+      final stateFixture = ArculusSignInState(username: '', password: '');
+
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: ArculusPasswordSignInBody(
+            controller: controller,
+            uiData: uiDataFixture,
+            signInState: stateFixture,
+          ),
+        ),
+      ));
+
+      final usernameFieldFinder = find.byKey(Key('sign-in-username'));
+      final passwordFieldFinder = find.byKey(Key('sign-in-password'));
+      final signInButtomFinder = find.byKey(Key('sign-in-button'));
+
+      await tester.enterText(usernameFieldFinder, 'test123@test.com');
+      await tester.enterText(passwordFieldFinder, 'admin123*');
+      await tester.tap(signInButtomFinder);
+
+      verify(controller.onSignInPressed(any, 'test123@test.com', 'admin123*'))
+          .called(1);
+    },
+  );
 }

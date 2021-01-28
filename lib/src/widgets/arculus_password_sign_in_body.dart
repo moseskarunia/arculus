@@ -108,6 +108,7 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
             controller: _passwordController,
             enabled: !widget.signInState.isLoading,
             decoration: InputDecoration(hintText: widget.uiData.passwordHint),
+            obscureText: true,
           ),
         ),
         Container(
@@ -123,10 +124,21 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
                 widget.signInState.errorMessage.isEmpty
             ? SizedBox()
             : Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 key: Key('sign-in-error-message'),
                 children: [
-                  Icon(Icons.error, size: 14, color: Colors.red),
-                  Expanded(child: Text(widget.signInState.errorMessage)),
+                  Icon(
+                    Icons.error,
+                    size: 14,
+                    color: Theme.of(context).errorColor,
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      widget.signInState.errorMessage,
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                  ),
                 ],
               ),
       ],
