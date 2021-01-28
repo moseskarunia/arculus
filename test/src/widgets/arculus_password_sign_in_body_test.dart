@@ -159,4 +159,118 @@ void main() {
       expect(usernameTextField.enabled, false);
     });
   });
+
+  group('password TextField', () {
+    final uiDataFixture = ArculusSignInStaticUIData(
+      usernameHint: 'Email or username',
+      passwordHint: 'Password',
+      signInButtonLabel: 'SIGN IN',
+    );
+
+    testWidgets(
+      'should be wrapped in container with 32 bottom margin',
+      (tester) async {
+        final stateFixture = ArculusSignInState();
+
+        await tester.pumpWidget(MaterialApp(
+          home: Scaffold(
+            body: ArculusPasswordSignInBody(
+              controller: controller,
+              uiData: uiDataFixture,
+              signInState: stateFixture,
+            ),
+          ),
+        ));
+
+        final passwordFieldFinder = find.byKey(Key('sign-in-password'));
+        final containerWrapperFinder = find
+            .ancestor(of: passwordFieldFinder, matching: find.byType(Container))
+            .first;
+
+        expect(
+          tester.widget<Container>(containerWrapperFinder).margin,
+          EdgeInsets.only(bottom: 32),
+        );
+      },
+    );
+    testWidgets(
+      'should be empty with provided hint when no password provided in state',
+      (tester) async {
+        final stateFixture = ArculusSignInState();
+
+        await tester.pumpWidget(MaterialApp(
+          home: Scaffold(
+            body: ArculusPasswordSignInBody(
+              controller: controller,
+              uiData: uiDataFixture,
+              signInState: stateFixture,
+            ),
+          ),
+        ));
+
+        final passwordFieldFinder = find.byKey(Key('sign-in-password'));
+        final passwordTextField = tester.widget<TextField>(passwordFieldFinder);
+
+        expect(
+          passwordTextField.decoration.hintText,
+          uiDataFixture.passwordHint,
+        );
+        expect(passwordTextField.controller.text, '');
+      },
+    );
+
+    testWidgets(
+      'should assign state.password if provided',
+      (tester) async {
+        final stateFixture = ArculusSignInState(password: 'admin123');
+
+        await tester.pumpWidget(MaterialApp(
+          home: Scaffold(
+            body: ArculusPasswordSignInBody(
+              controller: controller,
+              uiData: uiDataFixture,
+              signInState: stateFixture,
+            ),
+          ),
+        ));
+
+        final passwordFieldFinder = find.byKey(Key('sign-in-password'));
+        final passwordTextField = tester.widget<TextField>(passwordFieldFinder);
+
+        expect(
+          passwordTextField.decoration.hintText,
+          uiDataFixture.passwordHint,
+        );
+        expect(passwordTextField.controller.text, 'admin123');
+      },
+    );
+
+    testWidgets('should not be editable when state.isLoading', (tester) async {
+      final stateFixture = ArculusSignInState(
+        username: 'test@test.com',
+        password: 'admin123',
+        isLoading: true,
+      );
+
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: ArculusPasswordSignInBody(
+            controller: controller,
+            uiData: uiDataFixture,
+            signInState: stateFixture,
+          ),
+        ),
+      ));
+
+      final passwordFieldFinder = find.byKey(Key('sign-in-password'));
+      final passwordTextField = tester.widget<TextField>(passwordFieldFinder);
+
+      expect(
+        passwordTextField.decoration.hintText,
+        uiDataFixture.passwordHint,
+      );
+      expect(passwordTextField.controller.text, 'admin123');
+      expect(passwordTextField.enabled, false);
+    });
+  });
 }

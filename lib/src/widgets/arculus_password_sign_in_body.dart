@@ -37,7 +37,7 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
     _usernameController =
         TextEditingController(text: widget.signInState.username ?? '');
     _passwordController =
-        TextEditingController(text: widget.signInState.username ?? '');
+        TextEditingController(text: widget.signInState.password ?? '');
   }
 
   @override
@@ -76,6 +76,7 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
           child: TextField(
             key: Key('sign-in-password'),
             controller: _passwordController,
+            enabled: !widget.signInState.isLoading,
             decoration: InputDecoration(hintText: widget.uiData.passwordHint),
           ),
         ),
