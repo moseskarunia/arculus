@@ -59,6 +59,26 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
 
   @override
   Widget build(BuildContext context) {
+    Widget buttonChild = Text(widget.uiData.signInButtonLabel);
+
+    if (widget.signInState.isLoading) {
+      buttonChild = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buttonChild,
+          Container(
+            margin: const EdgeInsets.only(left: 16),
+            width: 12,
+            height: 12,
+            child: CircularProgressIndicator(
+              key: Key('sign-in-button-progress-indicator'),
+              strokeWidth: 2,
+            ),
+          )
+        ],
+      );
+    }
+
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 16),
       children: [
@@ -84,8 +104,9 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
           margin: const EdgeInsets.only(bottom: 16),
           child: ElevatedButton(
             key: Key('sign-in-button'),
-            child: Text(widget.uiData.signInButtonLabel),
-            onPressed: () => _signIn(context),
+            child: buttonChild,
+            onPressed:
+                widget.signInState.isLoading ? null : () => _signIn(context),
           ),
         )
       ],

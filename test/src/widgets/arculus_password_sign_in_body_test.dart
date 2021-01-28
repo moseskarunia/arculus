@@ -256,4 +256,98 @@ void main() {
       expect(passwordTextField.enabled, false);
     });
   });
+
+  group('sign in button', () {
+    final uiDataFixture = ArculusSignInStaticUIData(
+      usernameHint: 'Email or username',
+      passwordHint: 'Password',
+      signInButtonLabel: 'SIGN IN',
+    );
+
+    testWidgets(
+      'should be labelled with uiData.signInButtonLabel',
+      (tester) async {
+        final stateFixture = ArculusSignInState(
+          username: 'test@test.com',
+          password: 'admin123',
+        );
+
+        await tester.pumpWidget(MaterialApp(
+          home: Scaffold(
+            body: ArculusPasswordSignInBody(
+              controller: controller,
+              uiData: uiDataFixture,
+              signInState: stateFixture,
+            ),
+          ),
+        ));
+
+        final buttonFinder = find.byKey(Key('sign-in-button'));
+        final button = tester.widget<ElevatedButton>(buttonFinder);
+
+        final buttonTextFinder = find
+            .descendant(of: buttonFinder, matching: find.byType(Text))
+            .first;
+        final text = tester.widget<Text>(buttonTextFinder);
+
+        expect(text.data, uiDataFixture.signInButtonLabel);
+        expect(button.enabled, true);
+      },
+    );
+    testWidgets(
+      'should be disabled when state.isLoading',
+      (tester) async {
+        final stateFixture = ArculusSignInState(
+          username: 'test@test.com',
+          password: 'admin123',
+          isLoading: true,
+        );
+
+        await tester.pumpWidget(MaterialApp(
+          home: Scaffold(
+            body: ArculusPasswordSignInBody(
+              controller: controller,
+              uiData: uiDataFixture,
+              signInState: stateFixture,
+            ),
+          ),
+        ));
+
+        final buttonFinder = find.byKey(Key('sign-in-button'));
+        final button = tester.widget<ElevatedButton>(buttonFinder);
+
+        final buttonTextFinder = find
+            .descendant(of: buttonFinder, matching: find.byType(Text))
+            .first;
+        final text = tester.widget<Text>(buttonTextFinder);
+
+        expect(text.data, uiDataFixture.signInButtonLabel);
+        expect(button.enabled, false);
+
+        final progressIndicatorFinder = find.byKey(
+          Key('sign-in-button-progress-indicator'),
+        );
+        final progressIndicator =
+            tester.widget<CircularProgressIndicator>(progressIndicatorFinder);
+
+        expect(progressIndicatorFinder, findsOneWidget);
+        expect(progressIndicator.strokeWidth, 2);
+
+        final progressWrapperFinder = find
+            .ancestor(
+              of: progressIndicatorFinder,
+              matching: find.byType(Container),
+            )
+            .first;
+
+        final progressWrapper = tester.widget<Container>(progressWrapperFinder);
+
+        expect(
+          progressWrapper.constraints,
+          BoxConstraints.tightFor(width: 12, height: 12),
+        );
+        expect(progressWrapper.margin, EdgeInsets.only(left: 16));
+      },
+    );
+  });
 }
