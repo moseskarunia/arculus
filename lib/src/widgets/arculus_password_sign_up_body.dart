@@ -23,7 +23,7 @@ class ArculusPasswordSignUpBody extends StatefulWidget {
     Key key,
     @required this.controller,
     @required this.uiData,
-    this.signUpState,
+    this.signUpState = const ArculusSignUpState(),
     this.padding,
   }) : super(key: key);
 
@@ -56,11 +56,57 @@ class _ArculusPasswordSignUpBodyState extends State<ArculusPasswordSignUpBody> {
     super.dispose();
   }
 
+  Future<void> _signUp(BuildContext context) {
+    //
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       key: Key('sign-up-root-list-view'),
       padding: widget.padding ?? const EdgeInsets.symmetric(vertical: 16),
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          child: TextField(
+            key: Key('sign-up-username-field'),
+            controller: _usernameController,
+            decoration: InputDecoration(hintText: widget.uiData.usernameHint),
+            enabled: !widget.signUpState.isLoading,
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          child: TextField(
+            key: Key('sign-up-password-field'),
+            controller: _passwordController,
+            decoration: InputDecoration(hintText: widget.uiData.passwordHint),
+            obscureText: true,
+            enabled: !widget.signUpState.isLoading,
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(bottom: 32),
+          child: TextField(
+            key: Key('sign-up-retyped-password-field'),
+            controller: _retypedPasswordController,
+            decoration: InputDecoration(
+              hintText: widget.uiData.retypedPasswordHint,
+            ),
+            obscureText: true,
+            enabled: !widget.signUpState.isLoading,
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          child: ElevatedButton(
+            key: Key('sign-up-button'),
+            onPressed:
+                widget.signUpState.isLoading ? null : () => _signUp(context),
+            child: Text(widget.uiData.signUpButtonLabel),
+          ),
+        )
+      ],
     );
   }
 }
