@@ -13,7 +13,7 @@ class ArculusPasswordSignInBody extends StatefulWidget {
   final ArculusSignInStaticUIData uiData;
 
   /// Provide sign in state to modify the UI, such as errorMessage and isLoading
-  final ArculusSignInState signInState;
+  final ArculusPasswordSignInState signInState;
 
   /// Will be applied to list view. If null, will use
   /// EdgeInsets.symmetric(vertical: 16)
@@ -40,9 +40,9 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
   void initState() {
     super.initState();
     _usernameController =
-        TextEditingController(text: widget.signInState.username ?? '');
+        TextEditingController(text: widget.signInState?.username ?? '');
     _passwordController =
-        TextEditingController(text: widget.signInState.password ?? '');
+        TextEditingController(text: widget.signInState?.password ?? '');
   }
 
   @override
@@ -234,7 +234,7 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
 }
 
 /// State of the sign in body.
-class ArculusSignInState extends Equatable {
+class ArculusPasswordSignInState extends Equatable {
   /// Error message from the result of sign in attempt. Will be automatically
   /// displayed at the bottom of sign up button if provided.
   final String errorMessage;
@@ -246,7 +246,7 @@ class ArculusSignInState extends Equatable {
   /// there's any cached initial value.
   final String username, password;
 
-  const ArculusSignInState({
+  const ArculusPasswordSignInState({
     this.errorMessage,
     this.isLoading = false,
     this.username,

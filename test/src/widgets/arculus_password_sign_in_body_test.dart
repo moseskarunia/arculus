@@ -14,7 +14,7 @@ void main() {
 
   group('ArculusSignInState', () {
     test('props', () {
-      final state = ArculusSignInState(
+      final state = ArculusPasswordSignInState(
         username: 'test@test.com',
         password: 'admin12345',
         errorMessage: 'Invalid username',
@@ -36,7 +36,7 @@ void main() {
       signInButtonLabel: 'SIGN IN',
     );
     testWidgets('should use provided padding', (tester) async {
-      final stateFixture = ArculusSignInState();
+      final stateFixture = ArculusPasswordSignInState();
 
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
@@ -54,7 +54,7 @@ void main() {
       expect(listView.padding, EdgeInsets.all(16));
     });
     testWidgets('should use default padding', (tester) async {
-      final stateFixture = ArculusSignInState();
+      final stateFixture = ArculusPasswordSignInState();
 
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
@@ -82,7 +82,7 @@ void main() {
     testWidgets(
       'should be wrapped in container with 16 bottom margin',
       (tester) async {
-        final stateFixture = ArculusSignInState();
+        final stateFixture = ArculusPasswordSignInState();
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
@@ -108,7 +108,7 @@ void main() {
     testWidgets(
       'should be empty with provided hint when no username provided in state',
       (tester) async {
-        final stateFixture = ArculusSignInState();
+        final stateFixture = ArculusPasswordSignInState();
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
@@ -134,7 +134,7 @@ void main() {
     testWidgets(
       'should assign state.username if provided',
       (tester) async {
-        final stateFixture = ArculusSignInState(username: 'test@test.com');
+        final stateFixture = ArculusPasswordSignInState(username: 'test@test.com');
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
@@ -158,7 +158,7 @@ void main() {
     );
 
     testWidgets('should not be editable when state.isLoading', (tester) async {
-      final stateFixture = ArculusSignInState(
+      final stateFixture = ArculusPasswordSignInState(
         username: 'test@test.com',
         password: 'admin123',
         isLoading: true,
@@ -196,7 +196,7 @@ void main() {
     testWidgets(
       'should be wrapped in container with 32 bottom margin with ',
       (tester) async {
-        final stateFixture = ArculusSignInState();
+        final stateFixture = ArculusPasswordSignInState();
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
@@ -222,7 +222,7 @@ void main() {
     testWidgets(
       'should be empty with provided hint when no password provided in state',
       (tester) async {
-        final stateFixture = ArculusSignInState();
+        final stateFixture = ArculusPasswordSignInState();
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
@@ -249,7 +249,7 @@ void main() {
     testWidgets(
       'should assign state.password if provided',
       (tester) async {
-        final stateFixture = ArculusSignInState(password: 'admin123');
+        final stateFixture = ArculusPasswordSignInState(password: 'admin123');
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
@@ -273,7 +273,7 @@ void main() {
     );
 
     testWidgets('should not be editable when state.isLoading', (tester) async {
-      final stateFixture = ArculusSignInState(
+      final stateFixture = ArculusPasswordSignInState(
         username: 'test@test.com',
         password: 'admin123',
         isLoading: true,
@@ -311,7 +311,7 @@ void main() {
     testWidgets(
       'should be labelled with uiData.signInButtonLabel',
       (tester) async {
-        final stateFixture = ArculusSignInState(
+        final stateFixture = ArculusPasswordSignInState(
           username: 'test@test.com',
           password: 'admin123',
         );
@@ -345,7 +345,7 @@ void main() {
     testWidgets(
       'should be disabled when state.isLoading',
       (tester) async {
-        final stateFixture = ArculusSignInState(
+        final stateFixture = ArculusPasswordSignInState(
           username: 'test@test.com',
           password: 'admin123',
           isLoading: true,
@@ -412,7 +412,7 @@ void main() {
 
     testWidgets('should NOT be visible when state.errorMessage is null',
         (tester) async {
-      final stateFixture = ArculusSignInState(
+      final stateFixture = ArculusPasswordSignInState(
         username: 'test@test.com',
         password: 'admin123',
       );
@@ -433,7 +433,7 @@ void main() {
     testWidgets(
       'should be visible when state.errorMessage is provided',
       (tester) async {
-        final stateFixture = ArculusSignInState(
+        final stateFixture = ArculusPasswordSignInState(
           username: 'test@test.com',
           password: 'admin123',
           errorMessage:
@@ -494,7 +494,7 @@ void main() {
         passwordHint: 'Password',
         signInButtonLabel: 'SIGN IN',
       );
-      final stateFixture = ArculusSignInState(username: '', password: '');
+      final stateFixture = ArculusPasswordSignInState(username: '', password: '');
 
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
@@ -528,7 +528,7 @@ void main() {
         signUpActionLabel: 'Sign Up',
       );
 
-      final stateFixture = ArculusSignInState();
+      final stateFixture = ArculusPasswordSignInState();
 
       await tester.pumpWidget(MaterialApp(
         theme: ThemeData.from(
@@ -576,7 +576,7 @@ void main() {
         signUpQuestionLabel: 'No account yet?',
       );
 
-      final stateFixture = ArculusSignInState();
+      final stateFixture = ArculusPasswordSignInState();
 
       await tester.pumpWidget(MaterialApp(
         theme: ThemeData.from(
@@ -630,7 +630,7 @@ void main() {
         resetPasswordActionLabel: 'Reset Your Password',
       );
 
-      final stateFixture = ArculusSignInState();
+      final stateFixture = ArculusPasswordSignInState();
 
       await tester.pumpWidget(MaterialApp(
         theme: ThemeData.from(
@@ -681,7 +681,7 @@ void main() {
         resetPasswordQuestionLabel: 'Password forgotten?',
       );
 
-      final stateFixture = ArculusSignInState();
+      final stateFixture = ArculusPasswordSignInState();
 
       await tester.pumpWidget(MaterialApp(
         theme: ThemeData.from(
