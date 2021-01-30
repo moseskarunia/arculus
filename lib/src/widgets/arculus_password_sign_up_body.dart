@@ -56,57 +56,114 @@ class _ArculusPasswordSignUpBodyState extends State<ArculusPasswordSignUpBody> {
     super.dispose();
   }
 
-  Future<void> _signUp(BuildContext context) {
-    //
+  Future<void> _signUp(BuildContext context) async {
+    /// Close the keyboard
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+
+    await widget.controller.onSignUpPressed(
+      context,
+      _usernameController.text,
+      _passwordController.text,
+      _retypedPasswordController.text,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> listViewChildren = [
+      Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: TextField(
+          key: Key('sign-up-username-field'),
+          controller: _usernameController,
+          decoration: InputDecoration(hintText: widget.uiData.usernameHint),
+          enabled: !widget.signUpState.isLoading,
+        ),
+      ),
+      Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: TextField(
+          key: Key('sign-up-password-field'),
+          controller: _passwordController,
+          decoration: InputDecoration(hintText: widget.uiData.passwordHint),
+          obscureText: true,
+          enabled: !widget.signUpState.isLoading,
+        ),
+      ),
+      Container(
+        margin: const EdgeInsets.only(bottom: 32),
+        child: TextField(
+          key: Key('sign-up-retyped-password-field'),
+          controller: _retypedPasswordController,
+          decoration: InputDecoration(
+            hintText: widget.uiData.retypedPasswordHint,
+          ),
+          obscureText: true,
+          enabled: !widget.signUpState.isLoading,
+        ),
+      ),
+    ];
+
+    Widget buttonChild = Text(widget.uiData.signUpButtonLabel);
+
+    if (widget.signUpState.isLoading) {
+      buttonChild = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buttonChild,
+          Container(
+            margin: const EdgeInsets.only(left: 16),
+            width: 12,
+            height: 12,
+            child: CircularProgressIndicator(
+              key: Key('sign-up-button-progress-indicator'),
+              strokeWidth: 2,
+            ),
+          )
+        ],
+      );
+    }
+
+    listViewChildren.add(Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: ElevatedButton(
+        key: Key('sign-up-button'),
+        onPressed: widget.signUpState.isLoading ? null : () => _signUp(context),
+        child: buttonChild,
+      ),
+    ));
+
+    if (widget.signUpState.errorMessage != null &&
+        widget.signUpState.errorMessage.isNotEmpty) {
+      listViewChildren.add(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          key: Key('sign-up-error-message'),
+          children: [
+            Icon(
+              Icons.error,
+              size: 14,
+              color: Theme.of(context).errorColor,
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                widget.signUpState.errorMessage,
+                style: Theme.of(context).textTheme.caption,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return ListView(
       key: Key('sign-up-root-list-view'),
       padding: widget.padding ?? const EdgeInsets.symmetric(vertical: 16),
-      children: [
-        Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          child: TextField(
-            key: Key('sign-up-username-field'),
-            controller: _usernameController,
-            decoration: InputDecoration(hintText: widget.uiData.usernameHint),
-            enabled: !widget.signUpState.isLoading,
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          child: TextField(
-            key: Key('sign-up-password-field'),
-            controller: _passwordController,
-            decoration: InputDecoration(hintText: widget.uiData.passwordHint),
-            obscureText: true,
-            enabled: !widget.signUpState.isLoading,
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(bottom: 32),
-          child: TextField(
-            key: Key('sign-up-retyped-password-field'),
-            controller: _retypedPasswordController,
-            decoration: InputDecoration(
-              hintText: widget.uiData.retypedPasswordHint,
-            ),
-            obscureText: true,
-            enabled: !widget.signUpState.isLoading,
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          child: ElevatedButton(
-            key: Key('sign-up-button'),
-            onPressed:
-                widget.signUpState.isLoading ? null : () => _signUp(context),
-            child: Text(widget.uiData.signUpButtonLabel),
-          ),
-        )
-      ],
+      children: listViewChildren,
     );
   }
 }

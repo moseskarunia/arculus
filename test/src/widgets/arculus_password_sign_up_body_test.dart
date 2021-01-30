@@ -23,6 +23,7 @@ void main() {
       {@required ArculusSignUpState state}) async {
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData(errorColor: Colors.orange),
         home: Scaffold(
           body: ArculusPasswordSignUpBody(
             uiData: uiDataFixture,
@@ -264,6 +265,31 @@ void main() {
       (tester) async {
         await _setUpEnvironment(tester, state: stateFixture);
         _testButton(tester, key: Key('sign-up-button'), enabled: false);
+
+        final progressIndicatorFinder = find.byKey(
+          Key('sign-up-button-progress-indicator'),
+        );
+
+        final progressIndicator =
+            tester.widget<CircularProgressIndicator>(progressIndicatorFinder);
+
+        expect(progressIndicatorFinder, findsOneWidget);
+        expect(progressIndicator.strokeWidth, 2);
+
+        final progressWrapperFinder = find
+            .ancestor(
+              of: progressIndicatorFinder,
+              matching: find.byType(Container),
+            )
+            .first;
+
+        final progressWrapper = tester.widget<Container>(progressWrapperFinder);
+
+        expect(
+          progressWrapper.constraints,
+          BoxConstraints.tightFor(width: 12, height: 12),
+        );
+        expect(progressWrapper.margin, EdgeInsets.only(left: 16));
       },
     );
   });
@@ -272,15 +298,97 @@ void main() {
     testWidgets(
       'is provided, should be displayed under the button',
       (tester) async {
-        //
+        final stateFixture = const ArculusSignUpState(
+          errorMessage: 'Lorem ipsum dolor sit amet.',
+        );
+        await _setUpEnvironment(tester, state: stateFixture);
+
+        final errorMessageFinder = find.byKey(Key('sign-up-error-message'));
+        expect(tester.widget<Row>(errorMessageFinder).crossAxisAlignment,
+            CrossAxisAlignment.center);
+
+        final iconFinder = find
+            .descendant(of: errorMessageFinder, matching: find.byType(Icon))
+            .first;
+        final iconWidget = tester.widget<Icon>(iconFinder);
+
+        expect(iconWidget.icon, Icons.error);
+        expect(iconWidget.size, 14);
+        expect(
+          iconWidget.color,
+          Colors.orange,
+          reason: 'because the root theme has errorColor == Colors.orange',
+        );
+
+        final textFinder = find.descendant(
+          of: errorMessageFinder,
+          matching: find.byType(Text),
+        );
+        final text = tester.widget<Text>(textFinder);
+        expect(text.data, stateFixture.errorMessage);
+
+        expect(
+          text.style.fontSize,
+          Typography.englishLike2018.caption.fontSize,
+        );
+        expect(
+          text.style.fontWeight,
+          Typography.englishLike2018.caption.fontWeight,
+        );
       },
     );
 
     testWidgets(
       'is not provided, should not be visible',
       (tester) async {
-        //
+        final stateFixture = const ArculusSignUpState();
+        await _setUpEnvironment(tester, state: stateFixture);
+        expect(find.byKey(Key('sign-up-error-message')), findsNothing);
       },
     );
+  });
+
+  group('when sign up button tapped', () {
+    testWidgets(
+      'should call onSignUpPressed with values of '
+      'usernameTextField, passwordTextField, and retypedPasswordTextField',
+      (tester) async {
+        final stateFixture = const ArculusSignUpState();
+        await _setUpEnvironment(tester, state: stateFixture);
+
+        final usernameFinder = find.byKey(Key('sign-up-username-field'));
+        final passwordFinder = find.byKey(Key('sign-up-password-field'));
+        final retypedPasswordFinder =
+            find.byKey(Key('sign-up-retyped-password-field'));
+        final buttonFinder = find.byKey(Key('sign-up-button'));
+
+        await tester.enterText(usernameFinder, 'johndoe@test.com');
+        await tester.enterText(passwordFinder, 'admin123');
+        await tester.enterText(retypedPasswordFinder, 'admin888*');
+
+        await tester.tap(buttonFinder);
+
+        verify(
+          controller.onSignUpPressed(
+            any,
+            'johndoe@test.com',
+            'admin123',
+            'admin888*',
+          ),
+        ).called(1);
+      },
+    );
+
+    testWidgets('should not call anything', (tester) async {
+      final stateFixture = const ArculusSignUpState(isLoading: true);
+      await _setUpEnvironment(tester, state: stateFixture);
+      final buttonFinder = find.byKey(Key('sign-up-button'));
+
+      await tester.tap(buttonFinder);
+
+      verifyNever(
+        controller.onSignUpPressed(any, any, any, any),
+      );
+    });
   });
 }
