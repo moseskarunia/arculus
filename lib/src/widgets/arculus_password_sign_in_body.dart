@@ -33,8 +33,7 @@ class ArculusPasswordSignInBody extends StatefulWidget {
 }
 
 class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
-  TextEditingController _usernameController;
-  TextEditingController _passwordController;
+  TextEditingController _usernameController, _passwordController;
 
   @override
   void initState() {
