@@ -233,14 +233,10 @@ class _ArculusPasswordSignInBodyState extends State<ArculusPasswordSignInBody> {
   }
 }
 
-/// State of the sign in attempt. It can contains errorMessage, and Session.
-/// [errorMessage] determines if the state is `isAuthenticated` or not.
-///
-/// The arculus sign in body will automatically displays the error message
-/// at the bottom of sign in button if provided, and prevents it from calling
-/// [onAuthenticated].
+/// State of the sign in body.
 class ArculusSignInState extends Equatable {
-  /// Error message from the result of sign in attempt.
+  /// Error message from the result of sign in attempt. Will be automatically
+  /// displayed at the bottom of sign up button if provided.
   final String errorMessage;
 
   /// If true, the button and text field won't be interactable.
