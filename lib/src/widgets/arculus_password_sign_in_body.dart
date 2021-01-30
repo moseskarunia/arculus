@@ -264,7 +264,7 @@ class ArculusSignInState extends Equatable {
 /// Controller which contains callbacks pf arculus sign in body.
 abstract class ArculusSignInController {
   /// Triggered when sign in button is tapped.
-  Future<ArculusSignInState> onSignInPressed(
+  Future<void> onSignInPressed(
     BuildContext context,
     String username,
     String password,
